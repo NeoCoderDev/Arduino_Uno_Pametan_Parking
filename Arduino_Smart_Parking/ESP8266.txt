@@ -1,0 +1,46 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+
+// Definisanje WiFi kredencijala
+const char* ssid = "Pejak Property 2.4G"; // Zamenite sa vašim SSID
+const char* password = "pejakmbnd"; // Zamenite sa vašom lozinkom
+
+ESP8266WebServer server(80); // Kreiranje web servera na portu 80
+
+void setup() {
+  Serial.begin(9600);  // Koristimo primarni serijski port za komunikaciju sa Arduino Mega
+  WiFi.begin(ssid, password); // Povezivanje na WiFi
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Definisanje rute za rezervaciju
+  server.on("/reserve1", []() {
+    Serial.println("RESERVE1");  // Šalje komandu "RESERVE1" Arduino Megi
+    server.send(200, "text/plain", "Reservation 1 sent to Arduino Mega!");
+  });
+
+  server.on("/reserve2", []() {
+    Serial.println("RESERVE2");  // Šalje komandu "RESERVE2" Arduino Megi
+    server.send(200, "text/plain", "Reservation 2 sent to Arduino Mega!");
+  });
+
+  server.on("/reserve3", []() {
+    Serial.println("RESERVE3");  // Šalje komandu "RESERVE3" Arduino Megi
+    server.send(200, "text/plain", "Reservation 3 sent to Arduino Mega!");
+  });
+
+  server.begin();
+  Serial.println("HTTP server started");
+}
+
+void loop() {
+  server.handleClient();  // Obrada dolaznih HTTP zahteva
+}
