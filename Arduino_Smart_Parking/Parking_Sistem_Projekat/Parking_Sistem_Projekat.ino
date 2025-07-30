@@ -92,7 +92,7 @@ const int SemaforZeleno_2 = 40;
 const int SenzorPlamena = A0;
 const int pragAktivacije = 60; // Prag za aktivaciju alarma
 
-const int PumpPin = A2; // Pin na koji je povezan prekidač
+const int PumpPin = A2; 
 const int relayPin = A4;
 
 
@@ -119,22 +119,22 @@ unsigned long prethodniMillis = 0;
 
 unsigned long prethodniMillis2 = 0;
 
-const long trajanjeCrvenog = 7000;  // Trajanje crvenog svetla u milisekundama
-const long trajanjeZelenog = 7000;  // Trajanje zelenog svetla u milisekundama
-const long trajanjeBlinkanja = 4000; // Trajanje blinkanja zelenog svetla u milisekundama
-const long trajanjeZutog = 2000;    // Trajanje žutog svetla u milisekundama
+const long trajanjeCrvenog = 7000;  
+const long trajanjeZelenog = 7000;  
+const long trajanjeBlinkanja = 4000; 
+const long trajanjeZutog = 2000;   
 
-unsigned long blinkMillis = 0;  // Vreme za blinkanje zelenog svetla
-bool zelenoBlinkStanje = false; // Trenutno stanje blinkanja zelenog svetla
-//------------------------------------------------------------------------------------------------------
-bool zelenoBlinkStanje2 = false; // Trenutno stanje blinkanja zelenog svetla drugog semafora
+unsigned long blinkMillis = 0;  
+bool zelenoBlinkStanje = false; 
+//----------------------------------------------------------------------------
+bool zelenoBlinkStanje2 = false; /
 
-unsigned long blinkMillis2 = 0;  // Vreme za blinkanje zelenog svetla drugog semafora
+unsigned long blinkMillis2 = 0;
 
 
 // Definišemo minimalnu i maksimalnu udaljenost (u centimetrima)
-const int minDistance = 5;    // Minimalna udaljenost (najbliže senzoru)
-const int maxDistance = 10;  // Maksimalna udaljenost (najdalje od senzora)
+const int minDistance = 5;    
+const int maxDistance = 10;  
 
 // Ako koristite ST7920 sa SPI interfejsom
 U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/ 13, /* data=*/ 11, /* CS=*/ 10, /* reset=*/ 8);
@@ -142,16 +142,16 @@ U8G2_ST7920_128X64_F_SW_SPI u8g2(U8G2_R0, /* clock=*/ 13, /* data=*/ 11, /* CS=*
 void setup()
  {
 
-  dht.begin();  // Inicijalizacija DHT senzora
-  Serial.begin(9600);    // Serijska komunikacija sa računarom
-  Serial2.begin(115200); // Serijska komunikacija sa ESP8266 (RX2/TX2)
+  dht.begin();  
+  Serial.begin(9600);    
+  Serial2.begin(115200); 
   Serial.println("Arduino Mega ready");
 
-  Serial2.println("Are you there, ESP8266?"); // Šalji proveru na ESP8266
+  Serial2.println("Are you there, ESP8266?"); 
 
   pinMode(PumpPin, INPUT_PULLUP);
   pinMode(relayPin, OUTPUT);   
-  digitalWrite(relayPin, LOW);       // Početno stanje releja je isključeno
+  digitalWrite(relayPin, LOW);       
 
   
 
@@ -163,17 +163,17 @@ void setup()
  pinMode(buttonUlaz, INPUT_PULLUP);   
 
 
-  pinMode(31, OUTPUT);  // Trig pin kao izlaz
-  pinMode(30, INPUT);   // Echo pin kao ulaz
+  pinMode(31, OUTPUT); 
+  pinMode(30, INPUT);  
 
-  pinMode(50, OUTPUT);  // Trig pin kao izlaz
-  pinMode(51, INPUT);   // Echo pin kao ulaz
+  pinMode(50, OUTPUT); 
+  pinMode(51, INPUT);   
 
 
-  pinMode(45, OUTPUT);  // Trig pin kao izlaz
-  pinMode(44, INPUT);   // Echo pin kao ulaz
-  u8g2.begin(); // Inicijalizacija displeja
-  u8g2.setContrast(255); // Postavljanje maksimalnog kontrasta
+  pinMode(45, OUTPUT);  
+  pinMode(44, INPUT);   
+  u8g2.begin(); 
+  u8g2.setContrast(255); 
   pinMode(IR_Ulaz, INPUT);
   pinMode(IR_Izlaz, INPUT);
 
@@ -218,7 +218,6 @@ void setup()
 
 void loop()
 {
-  //-------------------------------------------------------------------------
   Semafori();
   ProveraKonekcije();
   KontrolaVodenePumpe();
@@ -228,27 +227,27 @@ void loop()
   DHTSenzor();
   proveriSenzorPlamena();
 
-//----------------------------------NIVO VODE------------------------------------------------------------------
+//----------------------------------NIVO VODE-------------------------
 
-//-----------------------------------------PARKING SENZOR 1-----------------------------------------------------------
+//-----------------------------------------PARKING SENZOR 1-----------
 long distance = readUltrasonic(31, 30);
 long distance_2 = readUltrasonic(50, 51);
   controlBuzzer(distance);
-  delay(100); // Mala pauza između merenja
+  delay(100); 
   
-  controlBuzzer(distance_2);  // Kontroliše pištanje za drugi senzor
-    delay(100); // Mala pauza između merenja
+  controlBuzzer(distance_2);  /
+    delay(100); 
 
-  delay(100); // Kratka pauza pre sledećeg čitanja
+  delay(100); 
 
   if (distance < 5) 
   {
     if (!carDetected) 
     {
-      carDetected = true;  // Označi da je auto detektovan
+      carDetected = true; 
       if (ParkingMesta > 0) 
       {
-        ParkingMesta--;  // Smanji broj slobodnih parking mesta
+        ParkingMesta--;  
         ZauzetaMesta++;
       }
     }
@@ -257,7 +256,7 @@ long distance_2 = readUltrasonic(50, 51);
   {
     if (carDetected)
     {
-      carDetected = false;  // Resetuj detekciju kada auto ode
+      carDetected = false;
       ParkingMesta++;
       ZauzetaMesta--;
     }
@@ -268,10 +267,10 @@ long distance_2 = readUltrasonic(50, 51);
   {
     if (!carDetected2) 
     {
-      carDetected2 = true;  // Označi da je auto detektovan
+      carDetected2 = true; 
       if (ParkingMesta > 0) 
       {
-        ParkingMesta--;  // Smanji broj slobodnih parking mesta
+        ParkingMesta--; 
         ZauzetaMesta++;
       }
     }
@@ -280,13 +279,13 @@ long distance_2 = readUltrasonic(50, 51);
   {
     if (carDetected2)
     {
-      carDetected2 = false;  // Resetuj detekciju kada auto ode
+      carDetected2 = false; 
       ParkingMesta++;
       ZauzetaMesta--;
     }
   }
 //-----------------------------------------------
-//---------------SPUŠTANJE RAMPE----------------------------
+//---------------SPUŠTANJE RAMPE-----------------
 //-----------------------------------------------
 if(Prvo_Stanje==1 && Drugo_Stanje==1)
 {
@@ -294,15 +293,14 @@ if(Prvo_Stanje==1 && Drugo_Stanje==1)
     Prvo_Stanje=0, Drugo_Stanje=0;
 }
 //----------------------------------------------
-  u8g2.clearBuffer();          // Brisanje bafera
-  u8g2.setFont(u8g2_font_ncenB08_tr); // Postavljanje fonta
+  u8g2.clearBuffer();         
+  u8g2.setFont(u8g2_font_ncenB08_tr);
   u8g2.setCursor(0, 10);
   u8g2.print("Slob. mesta: ");
   u8g2.print(ParkingMesta);
   u8g2.setCursor(0, 24);
   u8g2.print("Zauz. mesta: ");
   u8g2.print(ZauzetaMesta);
-//------------------------PARKINZI NA DISPLEJU
   u8g2.setCursor(0, 35);
   u8g2.print("P1: ");
   u8g2.print(distance);
@@ -322,13 +320,13 @@ if(Prvo_Stanje==1 && Drugo_Stanje==1)
 
 //----------------------------------------------------------------------VOIDI 
 void proveriSenzorPlamena() {
-  int stanjeVatre = analogRead(SenzorPlamena); // Čitanje vrednosti sa senzora plamena
-  Serial.println(stanjeVatre); // Ispisuje vrednost senzora na serijski monitor za debagovanje
+  int stanjeVatre = analogRead(SenzorPlamena);
+  Serial.println(stanjeVatre);
 
-  if (stanjeVatre < pragAktivacije) { // Ako je vrednost ispod praga (požar detektovan)
-    tone(piezoPin, 1500);  // Aktivira pištanje piezo zvučnika
+  if (stanjeVatre < pragAktivacije) {
+    tone(piezoPin, 1500); 
   } else {
-    noTone(piezoPin);  // Isključuje pištanje piezo zvučnika
+    noTone(piezoPin); 
   }
 }
 void DHTSenzor()
@@ -351,7 +349,7 @@ void DHTSenzor()
   Serial.print(temperatura);
   Serial.println(" *C");
 
-  delay(500);  // Pauza između očitavanja
+  delay(500); 
 }
 void prikaziTekst(int tekstIndex) 
 {
@@ -359,35 +357,33 @@ void prikaziTekst(int tekstIndex)
 
   switch (tekstIndex) {
     case 0:
-      u8g2.drawStr(0, 24, "Dobrodosli!"); // Prikazuje prvi tekst
+      u8g2.drawStr(0, 24, "Dobrodosli!");
       break;
   }
 
-  u8g2.sendBuffer(); // Slanje bafera na displej
+  u8g2.sendBuffer(); 
 }
 unsigned long prethodnoVremeUlaz = 0;
-const unsigned long vremeCekanja = 100; // Vreme čekanja od 100 milisekundi za debounce
+const unsigned long vremeCekanja = 100; 
 void kontrolaUlazaIzlaza() 
 {
   unsigned long trenutnoVreme = millis();
   // Provera stanja tastera za otvaranje rampe
-  buttonState = digitalRead(buttonUlaz); // Čitanje trenutnog stanja tastera
+  buttonState = digitalRead(buttonUlaz);
   if (buttonState != lastButtonState && (trenutnoVreme - prethodnoVremeUlaz >= vremeCekanja)) {
     if (buttonState == LOW) {
       OtvoriRampu();
       isOpen = true;
     }
-    isOpen = !isOpen; // Promena stanja rampe
-    prethodnoVremeUlaz = trenutnoVreme; // Ažuriraj vreme ulaza
+    isOpen = !isOpen; 
+    prethodnoVremeUlaz = trenutnoVreme;
   }
   
-  // Provera ulaza na parking
   if (digitalRead(IR_Ulaz) == LOW && Prvo_Stanje == 0) 
   {
     Prvo_Stanje = 1;
   }
 
-  // Provera izlaza sa parkinga
   if (digitalRead(IR_Izlaz) == LOW && Drugo_Stanje == 0 && (trenutnoVreme - prethodnoVremeUlaz >= vremeCekanja)) 
   {
     Drugo_Stanje = 1;
@@ -395,22 +391,22 @@ void kontrolaUlazaIzlaza()
     {
       OtvoriRampu();
     }
-    prethodnoVremeUlaz = trenutnoVreme; // Ažuriraj vreme izlaza
+    prethodnoVremeUlaz = trenutnoVreme; 
   }
 
 
 
-  lastButtonState = buttonState; // Skladištenje trenutnog stanja tastera za sledeću iteraciju
+  lastButtonState = buttonState; 
 }
 void Vodostaj() {
-  int NivoVode = analogRead(AnalogWaterPin); // Čitanje nivoa vode sa analognog pina
+  int NivoVode = analogRead(AnalogWaterPin); 
 
-  u8g2.setCursor(0, 55); // Podešavanje kursora za prikaz na ekranu
+  u8g2.setCursor(0, 55); 
   u8g2.print("Voda:  ");
-  u8g2.print(NivoVode); // Prikazivanje nivoa vode
-  u8g2.sendBuffer();  // Slanje bafera na displej
+  u8g2.print(NivoVode); 
+  u8g2.sendBuffer();  
 
-  delay(100); // Mala pauza pre sledećeg osvežavanja
+  delay(100); 
 }
 void KontrolaVentilacije() 
 { 
@@ -423,7 +419,7 @@ void KontrolaVentilacije()
      digitalWrite(ReleyPinFan,LOW);
   }
 }
-  bool pumpState = false;  // Početno stanje pumpe - isključena
+  bool pumpState = false; 
 void KontrolaVodenePumpe() {
 
   int StanjePumpe = digitalRead(PumpPin);
@@ -434,8 +430,8 @@ void ProveraKonekcije()
   float temperature = dht.readTemperature();
   if (Serial.available()) 
   {
-    String command = Serial.readStringUntil('\n'); // Čita komandu sa serijskog porta
-    command.trim(); // Uklanja eventualne razmake i prazne redove
+    String command = Serial.readStringUntil('\n');
+    command.trim(); 
     if (command == "OPEN") 
     {
         OtvoriRampu();
